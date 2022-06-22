@@ -3,5 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="C:/Users/JULIO/Desktop/mysql-connector-java-8.0.29.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JULIO/Downloads/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JULIO/Downloads/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JULIO/Downloads/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JULIO/Downloads/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/JULIO/Downloads/commons-collections4-4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
