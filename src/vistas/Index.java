@@ -17,7 +17,7 @@ public class Index extends JFrame {
 	private JButton btnSubirArchivos;
 	
 	public Index() {
-		setTitle("Uploader");
+		setTitle("Enlace de Sistemas Institucionales");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(400, 400,600, 190);
 		getContentPane().setLayout(null);
