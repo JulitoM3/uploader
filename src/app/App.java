@@ -66,8 +66,8 @@ public class App {
 		this.ordenReposcion = new OrdenReposicion();
 		this.procedimiento = new Procedimiento();
 
-		this.index.getBuscarButton().addActionListener(Buscar());
-		this.index.getSubirButton().addActionListener(Subir());
+		//this.index.getBuscarButton().addActionListener(Buscar());
+		//this.index.getSubirButton().addActionListener(Subir());
 	}
 
 	public void start() {
@@ -83,14 +83,14 @@ public class App {
 			JFileChooser path = new JFileChooser();
 			path.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			path.setCurrentDirectory(new File("c:/windows/%UserProfile%/Escritorio"));
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos csv", "xlsx");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos xlsx", "xlsx");
 			path.setFileFilter(filter);
 			
 			int respuesta = path.showOpenDialog(path);
 			if(respuesta == JFileChooser.APPROVE_OPTION){
 				this.selected = path.getSelectedFile();
 				this.path = this.selected.getPath();
-				this.index.getTextPath().setText(this.path);
+				//this.index.getTextPath().setText(this.path);
 			}
 			
 		};
