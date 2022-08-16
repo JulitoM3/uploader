@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Conexion {
-    private String baseDatos = "shared";
+    private String baseDatos = "test_java";
     private String usuario = "root";
     private String password = "";
     private String host = "jdbc:mysql://localhost:3306/" + baseDatos;
