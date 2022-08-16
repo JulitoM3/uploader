@@ -38,14 +38,14 @@ public class Index extends JFrame {
 		 * *********************/
 		private JTextField textPathOrdenes;
 		private JButton btnUploadOrdenes;
-		private JButton btnBuscarOrdenes;
+		private JButton buttonBuscarOrdenes;
 		
 		/*
 		 * Altas (Entregas)
 		 * *****************/
 		private JTextField textPathAltas;
 		private JButton btnUploadAltas;
-		private JButton btnBuscarAltas;
+		private JButton buttonBuscarAltas;
 		
 		/*
 		 * Altas SAI - PREI (Entregas con comprobante pago)
@@ -53,7 +53,7 @@ public class Index extends JFrame {
 		
 		private JTextField textPathSaiPrei;
 		private JButton btnUploadSaiPrei;
-		private JButton btnBuscarSaiPrei;
+		private JButton buttonBuscarSaiPrei;
 		
 	/*
 	 * Portal de Control de Abasto
@@ -65,14 +65,14 @@ public class Index extends JFrame {
 		
 		private JTextField textPathPagos;
 		private JButton btnUploadPagos;
-		private JButton btnBuscarPagos;
+		private JButton buttonBuscarPagos;
 		
 		/*
 		 * Notas de crédito
 		 * *****************/
 		private JTextField textPathNotas;
 		private JButton btnUploadNotas;
-		private JButton btnBuscarNotas;
+		private JButton buttonBuscarNotas;
 		
 		
 	public Index() {
@@ -219,11 +219,11 @@ public class Index extends JFrame {
 		lblArchivoNotasDe.setBounds(21, 363, 155, 20);
 		getContentPane().add(lblArchivoNotasDe);
 		
-		JButton btnBuscarCompraNet = new JButton("Buscar");
+		btnBuscarCompraNet = new JButton("Buscar");
 		btnBuscarCompraNet.setBounds(395, 61, 78, 23);
 		getContentPane().add(btnBuscarCompraNet);
 		
-		JButton btnBuscarArticulos = new JButton("Buscar");
+		btnBuscarArticulos = new JButton("Buscar");
 		btnBuscarArticulos.setBounds(395, 142, 78, 23);
 		getContentPane().add(btnBuscarArticulos);
 		
@@ -257,7 +257,7 @@ public class Index extends JFrame {
 	 * @return the btnBuscarCompraNet
 	 */
 	public JButton getBtnBuscarCompraNet() {
-		return btnBuscarCompraNet;
+		return this.btnBuscarCompraNet;
 	}
 
 	/**
@@ -265,6 +265,20 @@ public class Index extends JFrame {
 	 */
 	public void setBtnBuscarCompraNet(JButton btnBuscarCompraNet) {
 		this.btnBuscarCompraNet = btnBuscarCompraNet;
+	}
+	
+	/**
+	 * @return the btnUploadCompraNet
+	 */
+	public JButton getBtnUploadCompraNet() {
+		return btnUploadCompraNet;
+	}
+
+	/**
+	 * @param btnUploadCompraNet the btnUploadCompraNet to set
+	 */
+	public void setBtnUploadCompraNet(JButton btnBuscarCompraNet) {
+		this.btnBuscarCompraNet = btnUploadCompraNet;
 	}
 
 	/**
@@ -313,14 +327,14 @@ public class Index extends JFrame {
 	 * @return the btnBuscarOrdenes
 	 */
 	public JButton getBtnBuscarOrdenes() {
-		return btnBuscarOrdenes;
+		return buttonBuscarOrdenes;
 	}
 
 	/**
 	 * @param btnBuscarOrdenes the btnBuscarOrdenes to set
 	 */
 	public void setBtnBuscarOrdenes(JButton btnBuscarOrdenes) {
-		this.btnBuscarOrdenes = btnBuscarOrdenes;
+		this.buttonBuscarOrdenes = btnBuscarOrdenes;
 	}
 
 	/**
@@ -341,14 +355,14 @@ public class Index extends JFrame {
 	 * @return the btnBuscarAltas
 	 */
 	public JButton getBtnBuscarAltas() {
-		return btnBuscarAltas;
+		return buttonBuscarAltas;
 	}
 
 	/**
 	 * @param btnBuscarAltas the btnBuscarAltas to set
 	 */
 	public void setBtnBuscarAltas(JButton btnBuscarAltas) {
-		this.btnBuscarAltas = btnBuscarAltas;
+		this.buttonBuscarAltas = btnBuscarAltas;
 	}
 
 	/**
@@ -369,14 +383,14 @@ public class Index extends JFrame {
 	 * @return the btnBuscarSaiPrei
 	 */
 	public JButton getBtnBuscarSaiPrei() {
-		return btnBuscarSaiPrei;
+		return buttonBuscarSaiPrei;
 	}
 
 	/**
 	 * @param btnBuscarSaiPrei the btnBuscarSaiPrei to set
 	 */
 	public void setBtnBuscarSaiPrei(JButton btnBuscarSaiPrei) {
-		this.btnBuscarSaiPrei = btnBuscarSaiPrei;
+		this.buttonBuscarSaiPrei = btnBuscarSaiPrei;
 	}
 
 	/**
@@ -397,14 +411,14 @@ public class Index extends JFrame {
 	 * @return the btnBuscarPagos
 	 */
 	public JButton getBtnBuscarPagos() {
-		return btnBuscarPagos;
+		return buttonBuscarPagos;
 	}
 
 	/**
 	 * @param btnBuscarPagos the btnBuscarPagos to set
 	 */
 	public void setBtnBuscarPagos(JButton btnBuscarPagos) {
-		this.btnBuscarPagos = btnBuscarPagos;
+		this.buttonBuscarPagos = btnBuscarPagos;
 	}
 
 	/**
@@ -425,14 +439,14 @@ public class Index extends JFrame {
 	 * @return the btnBuscarNotas
 	 */
 	public JButton getBtnBuscarNotas() {
-		return btnBuscarNotas;
+		return buttonBuscarNotas;
 	}
 
 	/**
 	 * @param btnBuscarNotas the btnBuscarNotas to set
 	 */
 	public void setBtnBuscarNotas(JButton btnBuscarNotas) {
-		this.btnBuscarNotas = btnBuscarNotas;
+		this.buttonBuscarNotas = btnBuscarNotas;
 	}
 	
 
