@@ -9,12 +9,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+
+
+
+
 
 
 
@@ -164,9 +172,9 @@ public class App {
 					+ "fecha_fallo,fecha_publicacion,fecha_apertura,caracter_procedimiento,tipo_de_contratacion,tipo_procedimiento,medio_utilizado_propuestas,"
 					+ "codigo_contrato,numero_control_contrato,titulo_contrato,descripcion_contrato,fecha_inicio_contrato,fecha_fin_contrato,importe_contrato,moneda,"
 					+"estatus_contrato,convenio_modificatorio,clave_programa_federal,fecha_firma_contrato,contrato_marco,compra_consolidada,contrato_plurianual,clave_cartera_shcp,"
-					+ "folio_rupc,rfc,proveedor_contratista,estratificacion,clave_pais,rfc_verificado_sat,credito_externo,organismo_financiero,url_compranet,created_at,updated_at)"
-					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,??,?,?,?,?,?,?)";
-			//TODO: hace falta cuadrar los campos con el recorrido de los rows
+					+ "folio_rupc,rfc,proveedor_contratista,estratificacion,clave_pais,rfc_verificado_sat,credito_externo,organismo_financiero,url_compranet, created_at)"
+					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
 					
 				while(itr.hasNext()){
 					this.compranet = new Compranet();
@@ -182,40 +190,62 @@ public class App {
 							System.out.println("posicion:" + header.getHeaderPosition());
 							System.out.println("header: " + header.toString());
 							System.out.println("vacio o nulo?: " + this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+							
 							String cellType = null;
 							
+							
 							if(this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition())){
-							cellType = "BLANK";	
-							}else{
+								if(header.toString() == HeaderCompraNet.created_at.toString()){
+									cellType = "TIMESTAMP";
+								}else{
+									cellType = "BLANK";		
+								}
+							}
+							else{
 							cellType = this.returnCellType(workbook, sheet, currentRow.getRowNum(),header.getHeaderPosition());	
 							}
 							
 							if(cellType == "STRING" ){
-								ps.setString(header.getHeaderPosition()+1,this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
-								System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									ps.setString(header.getHeaderPosition()+1,this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 							}
 				
 							if(cellType == "NUMERIC"){
 								
 								if(header.toString() == HeaderCompraNet.codigo_expediente.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.clave_cucop.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.codigo_contrato.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.convenio_modificatorio.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.compra_consolidada.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.contrato_plurianual.toString()
-										&&
+										||
+										header.toString() == HeaderCompraNet.folio_rupc.toString()
+										||
 										header.toString() == HeaderCompraNet.rfc_verificado_sat.toString()
-										&&
+										||
 										header.toString() == HeaderCompraNet.credito_externo.toString()
 										){
 									ps.setInt(header.getHeaderPosition()+1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 									System.out.println("valor entero:" + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
-								}else{
+								}
+								else if(header.toString() == HeaderCompraNet.fecha_fallo.toString()
+										 || header.toString() == HeaderCompraNet.fecha_publicacion.toString()
+										 || header.toString() == HeaderCompraNet.fecha_apertura.toString()
+										 || header.toString() == HeaderCompraNet.fecha_inicio_contrato.toString()
+										 || header.toString() == HeaderCompraNet.fecha_fin_contrato.toString()
+										 || header.toString() == HeaderCompraNet.fecha_inicio_contrato.toString()){
+											
+											ps.setString(header.getHeaderPosition()+1, this.returnDateCellType(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("valor: " + this.returnDateCellType(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											
+											
+								}
+								else{
 									ps.setDouble(header.getHeaderPosition()+1, this.returnCellDoubleValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 									System.out.println("valor:" + this.returnCellDoubleValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));	
 								}	
@@ -225,8 +255,13 @@ public class App {
 								ps.setNull(header.getHeaderPosition()+1, 0);
 							}
 							
+							if(cellType == "TIMESTAMP"){
+								ps.setTimestamp(header.getHeaderPosition()+1, this.getCurrentTimeStamp() );	
+							}
+							
 							System.out.println("---------------------------------------");
 		
+							
 						}
 						ps.execute();
 						
@@ -301,6 +336,17 @@ public class App {
 		return value;
 	}
 	
+	private String returnDateCellType(XSSFWorkbook wb, XSSFSheet sheet, int row, int cell){
+		Date value = null;
+		XSSFWorkbook workbook = wb;
+		XSSFSheet sh = sheet;
+		Row selectedRow = sh.getRow(row);
+		Cell selectedCell = selectedRow.getCell(cell);
+		value = selectedCell.getDateCellValue();
+		DateFormat df = new SimpleDateFormat("dd/MM/YYYY h:mm:ss");
+		return df.format(value);
+	}
+	
 	private boolean isEmptyOrNull(XSSFWorkbook wb,XSSFSheet sheet ,int row, int cell){
 		
 		XSSFWorkbook workbook = wb;
@@ -308,6 +354,13 @@ public class App {
 		Row selectedRow = sh.getRow(row);
 		Cell selectedCell = selectedRow.getCell(cell);
 		return (selectedCell == null) ? true : false;
+	}
+	
+	private java.sql.Timestamp getCurrentTimeStamp() {
+
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Timestamp(today.getTime());
+
 	}
 
 
