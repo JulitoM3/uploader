@@ -47,8 +47,9 @@ public enum HeaderCompraNet {
       rfc_verificado_sat (41),
       credito_externo (42),
       organismo_financiero (43),
-      url_compranet (44);
-      
+      url_compranet (44),
+      created_at(45);
+      //updated_at(46);
 	  private int headerPosition = 0;
 	  
       
