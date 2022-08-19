@@ -106,7 +106,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathArticulos);
 		textPathArticulos.setColumns(10);
 		
-		JButton btnUploadArticulos = new JButton("Subir");
+		btnUploadArticulos = new JButton("Subir");
 		btnUploadArticulos.setBounds(490, 142, 78, 23);
 		getContentPane().add(btnUploadArticulos);
 		
@@ -114,7 +114,7 @@ public class Index extends JFrame {
 		lblOrdenesReposicion.setBounds(21, 174, 161, 23);
 		getContentPane().add(lblOrdenesReposicion);
 		
-		JButton btnUploadOrdenes = new JButton("Subir");
+		btnUploadOrdenes = new JButton("Subir");
 		btnUploadOrdenes.setBounds(490, 174, 78, 23);
 		getContentPane().add(btnUploadOrdenes);
 		
@@ -134,7 +134,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathAltas);
 		textPathAltas.setColumns(10);
 		
-		JButton btnUploadAltas = new JButton("Subir");
+		btnUploadAltas = new JButton("Subir");
 		btnUploadAltas.setBounds(490, 208, 78, 23);
 		getContentPane().add(btnUploadAltas);
 		
@@ -148,7 +148,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathSaiPrei);
 		textPathSaiPrei.setColumns(10);
 		
-		JButton btnUploadSaiPrei = new JButton("Subir");
+		btnUploadSaiPrei = new JButton("Subir");
 		btnUploadSaiPrei.setBounds(490, 241, 78, 23);
 		getContentPane().add(btnUploadSaiPrei);
 		
@@ -158,7 +158,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathPagos);
 		textPathPagos.setColumns(10);
 		
-		JButton btnUploadPagos = new JButton("Subir");
+		btnUploadPagos = new JButton("Subir");
 		btnUploadPagos.setBounds(490, 318, 78, 23);
 		getContentPane().add(btnUploadPagos);
 		
@@ -168,7 +168,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathNotas);
 		textPathNotas.setColumns(10);
 		
-		JButton btnUploadNotas = new JButton("Subir");
+		btnUploadNotas = new JButton("Subir");
 		btnUploadNotas.setBounds(490, 362, 78, 23);
 		getContentPane().add(btnUploadNotas);
 		
@@ -227,23 +227,23 @@ public class Index extends JFrame {
 		btnBuscarArticulos.setBounds(395, 142, 78, 23);
 		getContentPane().add(btnBuscarArticulos);
 		
-		JButton buttonBuscarOrdenes = new JButton("Buscar");
+		buttonBuscarOrdenes = new JButton("Buscar");
 		buttonBuscarOrdenes.setBounds(395, 174, 78, 23);
 		getContentPane().add(buttonBuscarOrdenes);
 		
-		JButton buttonBuscarAltas = new JButton("Buscar");
+		buttonBuscarAltas = new JButton("Buscar");
 		buttonBuscarAltas.setBounds(395, 208, 78, 23);
 		getContentPane().add(buttonBuscarAltas);
 		
-		JButton buttonBuscarSaiPrei = new JButton("Buscar");
+		buttonBuscarSaiPrei = new JButton("Buscar");
 		buttonBuscarSaiPrei.setBounds(395, 241, 78, 23);
 		getContentPane().add(buttonBuscarSaiPrei);
 		
-		JButton buttonBuscarPagos = new JButton("Buscar");
+		buttonBuscarPagos = new JButton("Buscar");
 		buttonBuscarPagos.setBounds(395, 318, 78, 23);
 		getContentPane().add(buttonBuscarPagos);
 		
-		JButton buttonBuscarNotas = new JButton("Buscar");
+		buttonBuscarNotas = new JButton("Buscar");
 		buttonBuscarNotas.setBounds(395, 362, 78, 23);
 		getContentPane().add(buttonBuscarNotas);
 	}
@@ -251,7 +251,30 @@ public class Index extends JFrame {
 	public JTextField getTextPathCompraNet(){
 		return this.textPathCompraNet;
 	}
+
+	public JTextField getTextPathArticulos(){
+		return this.textPathArticulos;
+	}
 	
+	public JTextField getTextPathOrdenes(){
+		return this.textPathOrdenes;
+	}
+	
+	public JTextField getTextPathAltas(){
+		return this.textPathAltas;
+	}
+	
+	public JTextField getTextPathAltasPreiSai(){
+		return this.textPathSaiPrei;
+	}
+	
+	public JTextField getTextPathPagos(){
+		return this.textPathPagos;
+	}
+	
+	public JTextField getTextPathNotas(){
+		return this.textPathPagos;
+	}
 
 	/**
 	 * @return the btnBuscarCompraNet
