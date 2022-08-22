@@ -48,6 +48,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 
+
+
+
 import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 import org.apache.poi.ss.usermodel.Cell;  
@@ -56,13 +59,16 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;  
 
 import vistas.Index;
+import modelos.AltaPreiSai;
 import modelos.Altas;
 import modelos.ArticulosContrato;
 import modelos.Compranet;
 import modelos.ClaveContrato;
 import modelos.HeaderCompraNet;
+import modelos.Notas;
 import modelos.OrdenReposicion;
 import modelos.OrdenesReposicion;
+import modelos.Pagos;
 import modelos.Procedimiento;
 import modelos.Conexion;
 
@@ -134,17 +140,17 @@ public class App {
 		this.index.getBtnBuscarAltas().addActionListener(buscarAltas());
 		this.index.getBtnUploadAltas().addActionListener(subirAltas());
 		this.index.getBtnBuscarSaiPrei().addActionListener(buscarAltasPreiSai());
-		//this.index.getBtnUploadSaiPrei().addActionListener(subirAltasPreiSai());
+		this.index.getBtnUploadSaiPrei().addActionListener(subirAltasPreiSai());
 		
 		/*
 		 * Botones de PREI MILLENIUM
 		 * **/
 		
-		this.index.getBtnBuscarPagos();
-		this.index.getBtnUploadPagos();
+		this.index.getBtnBuscarPagos().addActionListener(buscarPagos());
+		this.index.getBtnUploadPagos().addActionListener(subirPagos());
 		
-		this.index.getBtnBuscarNotas();
-		this.index.getBtnUploadNotas();
+		this.index.getBtnBuscarNotas().addActionListener(buscarNotas());
+		this.index.getBtnUploadNotas().addActionListener(subirNotas());
 		
 		
 	}
@@ -251,6 +257,44 @@ public class App {
 			
 		};
 		return buscarAltasPreiSai;
+	}
+
+	private ActionListener buscarPagos() throws SQLException {
+		ActionListener buscarPagos = ewt -> {
+			JFileChooser path = new JFileChooser();
+			path.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			path.setCurrentDirectory(new File("C:/windows/%UserProfile%/Escritorio"));
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos xlsx", "xlsx");
+			path.setFileFilter(filter);
+			
+			int respuesta = path.showOpenDialog(path);
+			if(respuesta == JFileChooser.APPROVE_OPTION){
+				this.selectedPagos = path.getSelectedFile();
+				this.pagosPath = this.selectedPagos.getPath();
+				this.index.getTextPathPagos().setText(this.pagosPath);
+			}
+			
+		};
+		return buscarPagos;
+	}
+	
+	private ActionListener buscarNotas() throws SQLException {
+		ActionListener buscarNotas = ewt -> {
+			JFileChooser path = new JFileChooser();
+			path.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			path.setCurrentDirectory(new File("C:/windows/%UserProfile%/Escritorio"));
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos xlsx", "xlsx");
+			path.setFileFilter(filter);
+			
+			int respuesta = path.showOpenDialog(path);
+			if(respuesta == JFileChooser.APPROVE_OPTION){
+				this.selectedNotasCredito = path.getSelectedFile();
+				this.notasCreditoPath = this.selectedNotasCredito.getPath();
+				this.index.getTextPathNotas().setText(this.notasCreditoPath);
+			}
+			
+		};
+		return buscarNotas;
 	}
 
 	
@@ -433,7 +477,7 @@ public class App {
 	}
 	
 	private ActionListener subirCompraNet() throws SQLException, IOException{
-		@SuppressWarnings("deprecation")
+	
 		ActionListener subirCompraNet = ewt -> {
 			
 			
@@ -1057,6 +1101,730 @@ public class App {
 
 	}
 	
+	private ActionListener subirAltasPreiSai() throws SQLException, IOException{
+
+		ActionListener subirAltasPreiSai = ewt -> {
+			
+			
+			try {
+				FileInputStream files = new FileInputStream (new File(this.altasSaiPreiPath));
+				XSSFWorkbook  workbook = new XSSFWorkbook(files);
+				XSSFSheet sheet = workbook.getSheetAt(0);
+				
+				Iterator<Row> itr = sheet.iterator();
+				
+				String buscarContrato = "select id from compranet where numero_control_contrato = ? limit 1";
+				String buscarOrden = "select id from ordenes_reposicion where numero_de_orden_reposicion = ? limit 1";
+				String insertSql = "INSERT INTO altas_sai_prei"+
+					 "("+
+					 "clas_ptal_origen,"+
+				     "ooad_umae,"+
+				     "clas_ptal,"+
+				     "nombre_unidad,"+
+				     "year,"+
+				     "alta_prei,"+
+				     "alta_contable_sai,"+
+				     "fecha_alta,"+
+				     "numero_documento,"+
+				     "numero_proveedor,"+
+				     "razon_social,"+
+				     "cargo_sai,"+
+				     "credito_sai,"+
+				     "importe_sai,"+
+				     "importe_prei,"+
+				     "importe_conciliado,"+
+				     "tipo_alta,"+
+				     "descripcion_tipo_alta,"+
+				     "tipo_error,"+
+				     "enviado,"+
+				     "fecha_envio,"+
+				     "numero_reposicion,"+
+				     "fecha_informacion_prei,"+
+				     "ui_abono,"+
+				     "un_ap,"+
+				     "cc_abono,"+
+				     "cuenta_abono,"+
+				     "ui_cargo,"+
+				     "cc_cargo,"+
+				     "cuenta_cargo,"+
+				     "fecha_carga,"+
+				     "asiento,"+
+				     "comprobante_prei,"+
+				     "fecha_introd_cr,"+
+				     "estatus_alta_calculado,"+
+				     "comprobante_pago,"+
+				     "fecha_programada_pago,"+
+				     "estatus_pago_calculado,"+
+				     "contrato_id,"+
+				     "orden_id,"+
+				     "created_at"+
+			    ")"
+			    + "values("
+			    + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+			    + ")";
+
+					
+				while(itr.hasNext()){
+				
+					Row currentRow = itr.next();
+					if(currentRow.getRowNum()== 0){ //saltamos el header
+						continue;
+					}
+					
+					try {
+					PreparedStatement searchContrato = this.conn.prepareStatement(buscarContrato);
+					PreparedStatement searchOrden = this.conn.prepareStatement(buscarOrden);
+					PreparedStatement ps = this.conn.prepareStatement(insertSql);
+						
+						for(AltaPreiSai header : AltaPreiSai.values()){
+							
+							System.out.println("posicion:" + header.getHeaderPosition());
+							System.out.println("header: " + header.toString());
+							System.out.println("vacio o nulo?: " + this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+						
+							String cellType = null;
+							
+							
+							if(this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition())){
+								if(header.toString() == AltaPreiSai.created_at.toString()){
+									cellType = "TIMESTAMP";
+								}else if(header.toString() == AltaPreiSai.contrato_id.toString() || 
+										header.toString() == AltaPreiSai.orden_id.toString()){
+									cellType = "RELATIONSHIP";
+								}
+								else{
+									cellType = "BLANK";		
+								}
+							}
+							else{
+							cellType = this.returnCellType(workbook, sheet, currentRow.getRowNum(),header.getHeaderPosition());	
+							}
+							
+							
+							if(cellType == "STRING" ){
+								if(header.toString() == AltaPreiSai.numero_documento.toString()){
+								searchContrato.setString(1, this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								ResultSet result = searchContrato.executeQuery();
+								if (result.next()){
+									this.selectedContrato = result.getInt(1);
+									System.out.println("id relacion en compranet: " + this.selectedContrato);	
+								}
+								}
+								ps.setString(header.getHeaderPosition()+1, this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								
+							}
+				
+							if(cellType == "NUMERIC"){
+								
+								if(header.toString() == AltaPreiSai.numero_reposicion.toString()){
+									searchOrden.setInt(1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									ResultSet res = searchOrden.executeQuery();
+									if (res.next()){
+										this.selectedOrden = res.getInt(1);
+										System.out.println("id relacion en OR: " + this.selectedOrden);	
+										}
+									System.out.println(this.selectedOrden);
+									}
+								
+									ps.setInt(header.getHeaderPosition()+1,this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								
+							
+									
+								if(header.toString() == AltaPreiSai.fecha_alta.toString()
+										 || header.toString() == AltaPreiSai.fecha_informacion_prei.toString()
+										 || header.toString() == AltaPreiSai.fecha_carga.toString()
+										 || header.toString() == AltaPreiSai.fecha_introd_cr.toString()
+										 || header.toString() == AltaPreiSai.fecha_programada_pago.toString()
+										 || header.toString() == AltaPreiSai.fecha_envio.toString()
+										 ){
+											
+											ps.setTimestamp(header.getHeaderPosition()+1, this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("valor: " + this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("tipo de celda: " + cellType);
+	
+								}
+								else if(
+										header.toString() == AltaPreiSai.numero_proveedor.toString()
+										|| header.toString() == AltaPreiSai.alta_contable_sai.toString()
+										|| header.toString() == AltaPreiSai.cargo_sai.toString()
+										|| header.toString() == AltaPreiSai.credito_sai.toString()
+										|| header.toString() == AltaPreiSai.tipo_alta.toString()
+										|| header.toString() == AltaPreiSai.enviado.toString()
+										|| header.toString() == AltaPreiSai.ui_abono.toString()
+										|| header.toString() == AltaPreiSai.un_ap.toString()
+										|| header.toString() == AltaPreiSai.cc_abono.toString()
+										|| header.toString() == AltaPreiSai.cuenta_abono.toString()
+										|| header.toString() == AltaPreiSai.ui_cargo.toString()
+										|| header.toString() == AltaPreiSai.cc_cargo.toString()
+										|| header.toString() == AltaPreiSai.cuenta_cargo.toString()
+										){
+									ps.setInt(header.getHeaderPosition()+1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor: " + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								}
+								else{
+									ps.setDouble(header.getHeaderPosition()+1, this.returnCellDoubleValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellDoubleAbastos(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+
+								}	
+							}
+							
+							if(cellType == "BLANK"){
+								ps.setNull(header.getHeaderPosition()+1, 0);
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "TIMESTAMP"){
+								ps.setTimestamp(header.getHeaderPosition()+1, this.getCurrentTimeStamp() );
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "RELATIONSHIP"){
+								if(header.toString() == Altas.contrato_id.toString()){
+									if(this.selectedContrato == 0){
+										ps.setNull(header.getHeaderPosition()+1, 0);
+									}else{
+										ps.setInt(header.getHeaderPosition()+1, this.selectedContrato);
+									}	
+								}
+								
+								if(header.toString() == Altas.orden_id.toString()){
+									if(this.selectedOrden == 0){
+										ps.setNull(header.getHeaderPosition()+1, 0);
+									}else{
+										ps.setInt(header.getHeaderPosition()+1, this.selectedOrden);
+									}	
+								}
+								
+							}
+							
+							System.out.println("---------------------------------------");
+		
+						}
+						ps.execute();
+						
+						
+						
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null,
+				                "Vaya algo salio mal: " + e.getMessage(),
+				                "PopUp Dialog",
+				                JOptionPane.INFORMATION_MESSAGE);
+						
+					e.printStackTrace();
+					}	
+					//;
+				}
+				
+				try {
+					this.conn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}	
+			
+			JOptionPane.showMessageDialog(null,
+	                "Se subió la información de manera correcta",
+	                "Mensaje",
+	                JOptionPane.INFORMATION_MESSAGE);
+		};
+		
+		
+		return subirAltasPreiSai;
+
+	}
+	
+	
+	private ActionListener subirPagos() throws SQLException, IOException{
+
+		ActionListener subirPagos = ewt -> {
+			
+			try {
+				FileInputStream files = new FileInputStream (new File(this.pagosPath));
+				XSSFWorkbook  workbook = new XSSFWorkbook(files);
+				XSSFSheet sheet = workbook.getSheetAt(0);
+				
+				Iterator<Row> itr = sheet.iterator();
+				
+				String buscarContrato = "select id from compranet where numero_control_contrato = ? limit 1";
+				String buscarAlta = "select id from altas_sai_prei where comprobante_pago = ? limit 1";
+				String insertSql = "INSERT INTO pagos"+
+					 "("+
+					 "un,"+
+					 "comprobante,"+
+					 "origen,"+
+					 "usuario,"+
+					 "tipo_cbte,"+
+					 "subtipo_cbte,"+
+					 "no_proveedor,"+
+					 "nombre_proveedor,"+
+					 "contrato,"+
+					 "factura,"+
+					 "plantilla_contable,"+
+					 "fecha_emision,"+
+					 "fecha_contable,"+
+					 "fecha_factura,"+
+					 "fecha_prog_pago,"+
+					 "fecha_pago,"+
+					 "importe_capturado,"+
+					 "importe_mxn,"+
+					 "moneda,"+
+					 "cierre_man,"+
+					 "estado_cierre,"+
+					 "estado_entrada,"+
+					 "estado_ppto,"+
+					 "estado_paridad,"+
+					 "estado_aprobacion,"+
+					 "estado_contabilizacion,"+
+					 "estado_pago,"+
+					 "pagos,"+
+					 "porcent_hp,"+
+					 "metodo,"+
+					 "negociado_nafin,"+
+					 "banco,"+
+					 "cuenta_corta_bancaria,"+
+					 "referencia_pago,"+
+					 "importe_pagado,"+
+					 "importe_bruto_pago,"+
+					 "descuento,"+
+					 "no_prov_env_pago,"+
+					 "nombre_prov_env_pago,"+
+					 "asiento_ac,"+
+					 "fecha_asiento_ac,"+
+					 "asiento_py,"+
+					 "fecha_asiento_py,"+
+					 "contrato_id,"+
+					 "alta_id,"+
+					 "created_at"+
+			    ")"
+			    + "values("
+			    + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+			    + ")";
+
+					
+				while(itr.hasNext()){
+				
+					Row currentRow = itr.next();
+					if(currentRow.getRowNum()== 0){ //saltamos el header
+						continue;
+					}
+					
+					try {
+					PreparedStatement searchContrato = this.conn.prepareStatement(buscarContrato);
+					PreparedStatement searchAlta = this.conn.prepareStatement(buscarAlta);
+					PreparedStatement ps = this.conn.prepareStatement(insertSql);
+						
+						for(Pagos header : Pagos.values()){
+							
+							System.out.println("posicion:" + header.getHeaderPosition());
+							System.out.println("header: " + header.toString());
+							System.out.println("vacio o nulo?: " + this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+						
+							String cellType = null;
+							
+							
+							if(this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition())){
+								if(header.toString() == Pagos.created_at.toString()){
+									cellType = "TIMESTAMP";
+								}else if(header.toString() == Pagos.contrato_id.toString() || 
+										header.toString() == Pagos.alta_id.toString()){
+									cellType = "RELATIONSHIP";
+								}
+								else{
+									cellType = "BLANK";		
+								}
+							}
+							else{
+							cellType = this.returnCellType(workbook, sheet, currentRow.getRowNum(),header.getHeaderPosition());	
+							}
+							
+							System.out.println("tipo de celda: " + cellType);
+							
+							if(cellType == "STRING" ){
+								if(header.toString() == Pagos.contrato.toString()){
+								searchContrato.setString(1, this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								ResultSet result = searchContrato.executeQuery();
+								if (result.next()){
+									this.selectedContrato = result.getInt(1);
+									System.out.println("id relacion en compranet: " + this.selectedContrato);	
+								}
+								}
+								
+								ps.setString(header.getHeaderPosition()+1, this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								
+								System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								
+							}
+				
+							if(cellType == "NUMERIC"){
+								
+								if(header.toString() == Pagos.comprobante.toString()){
+									searchAlta.setInt(1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									ResultSet res = searchAlta.executeQuery();
+									if (res.next()){
+										this.selectedAlta = res.getInt(1);
+										System.out.println("id relacion en ALTA: " + this.selectedAlta);	
+										}
+									System.out.println(this.selectedAlta);
+									}
+								
+									//ps.setInt(header.getHeaderPosition()+1,this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								
+							
+									
+								if(header.toString() == Pagos.fecha_emision.toString()
+										 || header.toString() == Pagos.fecha_contable.toString()
+										 || header.toString() == Pagos.fecha_factura.toString()
+										 || header.toString() == Pagos.fecha_prog_pago.toString()
+										 || header.toString() == Pagos.fecha_pago.toString()
+										 || header.toString() == Pagos.fecha_asiento_ac.toString()
+										 || header.toString() == Pagos.fecha_asiento_py.toString()
+										 ){
+											
+											ps.setTimestamp(header.getHeaderPosition()+1, this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("valor: " + this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("tipo de celda: " + cellType);
+	
+								}
+								else if(
+										header.toString() == Pagos.no_proveedor.toString()
+										||header.toString() == Pagos.no_prov_env_pago.toString()
+										||header.toString() == Pagos.no_prov_env_pago.toString()
+										||header.toString() == Pagos.pagos.toString()
+										||header.toString() == Pagos.porcent_hp.toString()
+										
+										){
+									ps.setInt(header.getHeaderPosition()+1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor: " + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								}
+								else{
+									ps.setDouble(header.getHeaderPosition()+1, this.returnCellDoubleValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellDoubleAbastos(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+
+								}	
+							}
+							
+							if(cellType == "BLANK"){
+								ps.setNull(header.getHeaderPosition()+1, 0);
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "TIMESTAMP"){
+								ps.setTimestamp(header.getHeaderPosition()+1, this.getCurrentTimeStamp() );
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "RELATIONSHIP"){
+								if(header.toString() == Pagos.contrato_id.toString()){
+									if(this.selectedContrato == 0){
+										ps.setNull(header.getHeaderPosition()+1, 0);
+									}else{
+										ps.setInt(header.getHeaderPosition()+1, this.selectedContrato);
+									}	
+								}
+								
+								if(header.toString() == Pagos.alta_id.toString()){
+									if(this.selectedAlta == 0){
+										ps.setNull(header.getHeaderPosition()+1, 0);
+									}else{
+										ps.setInt(header.getHeaderPosition()+1, this.selectedAlta);
+									}	
+								}
+								
+							}
+							
+							System.out.println("---------------------------------------");
+		
+						}
+						ps.execute();
+						
+						
+						
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null,
+				                "Vaya algo salio mal: " + e.getMessage(),
+				                "PopUp Dialog",
+				                JOptionPane.INFORMATION_MESSAGE);
+						
+					e.printStackTrace();
+					}	
+					//;
+				}
+				
+				try {
+					this.conn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}	
+			
+			JOptionPane.showMessageDialog(null,
+	                "Se subió la información de manera correcta",
+	                "Mensaje",
+	                JOptionPane.INFORMATION_MESSAGE);
+		};
+		
+		
+		return subirPagos;
+
+	}
+
+	private ActionListener subirNotas() throws SQLException, IOException{
+
+		ActionListener subirNotas = ewt -> {
+			
+			try {
+				FileInputStream files = new FileInputStream (new File(this.notasCreditoPath));
+				XSSFWorkbook  workbook = new XSSFWorkbook(files);
+				XSSFSheet sheet = workbook.getSheetAt(0);
+				
+				Iterator<Row> itr = sheet.iterator();
+			
+				String buscarPago = "select id from pagos where comprobante = ? limit 1";
+				String insertSql = "INSERT INTO notas_de_credito"+
+					 "("+
+						"un_nc,"+
+					    "nota_de_credito,"+
+					    "secuencia,"+
+					    "no_proveedor,"+
+					    "origen,"+
+					    "importe_aplicado,"+
+					    "importe_original,"+
+					    "fecha_emision,"+
+					    "fecha_documento,"+
+					    "fecha_emision_original,"+
+					    "fecha_documento_original,"+
+					    "contrato,"+
+					    "pedido,"+
+					    "motivo_nc,"+
+					    "tipo,"+
+					    "estado_nc,"+
+					    "bit_usuario_emision,"+
+					    "bit_fecha_emision,"+
+					    "bit_usuario_ultima_actualiz,"+
+					    "bit_fecha_ultima_actualiz,"+
+					    "cr_un_cr,"+
+					    "cr_comprobante,"+
+					    "cr_tipo_cr,"+
+					    "cr_fecha_emision,"+
+					    "cr_fecha_prog_pago,"+
+					    "cr_fecha_pago,"+
+					    "cr_importe_mxn,"+
+					    "cr_moneda,"+
+					    "cr_cierre_manual,"+
+					    "cr_estado_cierre,"+
+					    "cr_estado_entrada,"+
+					    "cr_estado_presupuesto,"+
+					    "cr_estado_aprobacion,"+
+					    "cr_estado_contabilizacion,"+
+					    "cr_estado_pago,"+
+					    "cr_hoja_de_pago,"+
+					    "cr_importe_bruto_a_pagar,"+
+					    "cr_descuento,"+
+					    "cr_importe_pagado,"+
+					    "pago_id,"+
+					    "created_at"+
+			    ")"
+			    + "values("
+			    + "?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?"
+			    + ")";
+
+					
+				while(itr.hasNext()){
+				
+					Row currentRow = itr.next();
+					if(currentRow.getRowNum()== 0){ //saltamos el header
+						continue;
+					}
+					
+					try {
+					
+					PreparedStatement searchPago = this.conn.prepareStatement(buscarPago);
+					PreparedStatement ps = this.conn.prepareStatement(insertSql);
+						
+						for(Notas header : Notas.values()){
+							
+							System.out.println("posicion:" + header.getHeaderPosition());
+							System.out.println("header: " + header.toString());
+							System.out.println("vacio o nulo?: " + this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+						
+							String cellType = null;
+							
+							
+							if(this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition())){
+								if(header.toString() == Notas.created_at.toString()){
+									cellType = "TIMESTAMP";
+								}else if(header.toString() == Notas.pago_id.toString()){
+									cellType = "RELATIONSHIP";
+								}
+								else{
+									cellType = "BLANK";		
+								}
+							}
+							else{
+							cellType = this.returnCellType(workbook, sheet, currentRow.getRowNum(),header.getHeaderPosition());	
+							}
+							
+							System.out.println("tipo de celda: " + cellType);
+							
+							if(cellType == "STRING" ){
+								
+								ps.setString(header.getHeaderPosition()+1, this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								
+								System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+								
+							}
+				
+							if(cellType == "NUMERIC"){
+								
+								if(header.toString() == Notas.cr_comprobante.toString()){
+									searchPago.setInt(1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									ResultSet res = searchPago.executeQuery();
+									if (res.next()){
+										this.selectedPago = res.getInt(1);
+										System.out.println("id relacion en ALTA: " + this.selectedPago);	
+										}
+									System.out.println(this.selectedPago);
+									}
+								
+									//ps.setInt(header.getHeaderPosition()+1,this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								
+							
+									
+								if(header.toString() == Notas.fecha_emision.toString()
+										 || header.toString() == Notas.fecha_documento.toString()
+										 || header.toString() == Notas.fecha_emision_original.toString()
+										 || header.toString() == Notas.fecha_documento_original.toString()
+										 || header.toString() == Notas.bit_fecha_emision.toString()
+										 || header.toString() == Notas.bit_fecha_ultima_actualiz.toString()
+										 || header.toString() == Notas.cr_fecha_emision.toString()
+										 || header.toString() == Notas.cr_fecha_prog_pago.toString()
+										 || header.toString() == Notas.cr_fecha_pago.toString()
+										 ){
+											
+											ps.setTimestamp(header.getHeaderPosition()+1, this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("valor: " + this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+											System.out.println("tipo de celda: " + cellType);
+	
+								}
+								else if(
+										header.toString() == Notas.no_proveedor.toString()
+										||header.toString() == Notas.origen.toString()
+										||header.toString() == Notas.un_nc.toString()
+										||header.toString() == Notas.secuencia.toString()
+										||header.toString() == Notas.cr_un_cr.toString()
+										||header.toString() == Notas.cr_comprobante.toString()
+										||header.toString() == Notas.cr_hoja_de_pago.toString()
+										
+										
+										){
+									ps.setInt(header.getHeaderPosition()+1, this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor: " + this.returnCellIntValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+								}
+								else{
+									ps.setDouble(header.getHeaderPosition()+1, this.returnCellDoubleValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("valor:" + this.returnCellDoubleAbastos(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									System.out.println("tipo de celda: " + cellType);
+
+								}	
+							}
+							
+							if(cellType == "BLANK"){
+								ps.setNull(header.getHeaderPosition()+1, 0);
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "TIMESTAMP"){
+								ps.setTimestamp(header.getHeaderPosition()+1, this.getCurrentTimeStamp() );
+								System.out.println("tipo de celda: " + cellType);
+
+							}
+							
+							if(cellType == "RELATIONSHIP"){
+								if(header.toString() == Notas.pago_id.toString()){
+									if(this.selectedPago == 0){
+										ps.setNull(header.getHeaderPosition()+1, 0);
+									}else{
+										ps.setInt(header.getHeaderPosition()+1, this.selectedPago);
+									}	
+								}
+								
+							}
+							
+							System.out.println("---------------------------------------");
+		
+						}
+						ps.execute();
+						
+						
+						
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null,
+				                "Vaya algo salio mal: " + e.getMessage(),
+				                "PopUp Dialog",
+				                JOptionPane.INFORMATION_MESSAGE);
+						
+					e.printStackTrace();
+					}	
+					//;
+				}
+				
+				try {
+					this.conn.close();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}catch(IOException e){
+				e.printStackTrace();
+			}	
+			
+			JOptionPane.showMessageDialog(null,
+	                "Se subió la información de manera correcta",
+	                "Mensaje",
+	                JOptionPane.INFORMATION_MESSAGE);
+		};
+		
+		
+		return subirNotas;
+
+	}
+
+	
 	
 	private String returnCellValue(XSSFWorkbook wb,XSSFSheet sheet ,int row, int cell){
 		String value = null;
@@ -1110,7 +1878,7 @@ public class App {
 		return ts;
 	}
 	
-private Timestamp returnCellTimeStampAbastosOrdenes(XSSFWorkbook wb,XSSFSheet sheet ,int row, int cell) throws ParseException{
+	private Timestamp returnCellTimeStampAbastosOrdenes(XSSFWorkbook wb,XSSFSheet sheet ,int row, int cell) throws ParseException{
 		
 	Date value = null;
 	XSSFWorkbook workbook = wb;
@@ -1122,6 +1890,8 @@ private Timestamp returnCellTimeStampAbastosOrdenes(XSSFWorkbook wb,XSSFSheet sh
 	return new java.sql.Timestamp(value.getTime());
 	
 	}
+
+
 	
 	
 	
