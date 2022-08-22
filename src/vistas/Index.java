@@ -273,7 +273,7 @@ public class Index extends JFrame {
 	}
 	
 	public JTextField getTextPathNotas(){
-		return this.textPathPagos;
+		return this.textPathNotas;
 	}
 
 	/**
