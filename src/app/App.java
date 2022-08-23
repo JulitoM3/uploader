@@ -24,33 +24,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import org.apache.poi.xssf.usermodel.XSSFSheet;  
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
 import org.apache.poi.ss.usermodel.Cell;  
@@ -62,14 +35,10 @@ import vistas.Index;
 import modelos.AltaPreiSai;
 import modelos.Altas;
 import modelos.ArticulosContrato;
-import modelos.Compranet;
-import modelos.ClaveContrato;
 import modelos.HeaderCompraNet;
 import modelos.Notas;
-import modelos.OrdenReposicion;
 import modelos.OrdenesReposicion;
 import modelos.Pagos;
-import modelos.Procedimiento;
 import modelos.Conexion;
 
 /**
@@ -85,6 +54,19 @@ public class App {
 	private String compraNetPath = "";
 	private String articulosContratoPath = "";
 	private String ordenesReposicionPath = "";
+	
+	/*
+	 * variables para clasificar las ordenes de reposicion
+	 * **/
+	
+	private double orderCantidadSolicitada = 0;
+	private double orderCantidadAtendida = 0;
+	
+	private Timestamp orderFechaAtencion = null;
+	private Timestamp orderFechaEntrega = null;
+	
+	/***/
+	
 	private String altasPath = "";
 	private String altasSaiPreiPath = "";
 	private String notasCreditoPath  = "";
@@ -748,9 +730,50 @@ public class App {
 								}
 								
 								}
+								
+								if(header.toString() == OrdenesReposicion.estatus_orden.toString()){
+									
+									String status = this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition());
+									System.out.println("cae en la validacion" + status);
+									
+									if(status.equals("ATENDIDA") || status.equals("ATENDIDA PARCIAL")){
+										System.out.println("cae en la validacion de atendida o atendida parcial");
+									this.orderFechaAtencion = this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), OrdenesReposicion.fecha_atencion.getHeaderPosition());
+									this.orderFechaEntrega = this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), OrdenesReposicion.fecha_entrega.getHeaderPosition());
+									this.orderCantidadAtendida = Double.valueOf(this.returnCellDoubleAbastos(workbook, sheet, currentRow.getRowNum(), OrdenesReposicion.cantidad_atendida.getHeaderPosition()).replace(",", "."));
+									this.orderCantidadSolicitada = Double.valueOf(this.returnCellDoubleAbastos(workbook, sheet, currentRow.getRowNum(), OrdenesReposicion.cantidad_solicitada.getHeaderPosition()).replace(",", "."));
+									
+										if(status.equals("ATENDIDA")){
+											if (this.orderCantidadSolicitada == this.orderCantidadAtendida
+													&& this.orderFechaAtencion.after(this.orderFechaEntrega)){
+												ps.setString(header.getHeaderPosition()+1,"ATENDIDA CON ATRASO");
+											System.out.println("Status: ATENDIDA CON ATRASO");
+											System.out.println("header: " + (header.getHeaderPosition()+1));
+											System.out.println("ps: " + ps.toString());
+											}
+										}
+										
+										if(status.equals("ATENDIDA PARCIAL")){
+											if(this.orderCantidadAtendida < this.orderCantidadSolicitada
+													&& this.orderFechaAtencion.after(this.orderFechaEntrega)){
+												ps.setString(header.getHeaderPosition()+1,"ATENDIDA PARCIAL CON ATRASO");
+												System.out.println("Status: ATENDIDA PARCIAL CON ATRASO");
+												System.out.println("header: " + header.getHeaderPosition()+1);
+												System.out.println("ps: " + ps.toString());
+											}
+										}
+									
+									}
+									else{
+										ps.setString(header.getHeaderPosition()+1,this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
+									}
+		
+								}else{
 									ps.setString(header.getHeaderPosition()+1,this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 									System.out.println("valor:" + this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 									System.out.println("tipo de celda: " + cellType);
+								}
+									
 							}
 				
 							if(cellType == "NUMERIC"){
@@ -767,7 +790,7 @@ public class App {
 										 || header.toString() == OrdenesReposicion.fecha_cancelacion.toString()
 										 || header.toString() == OrdenesReposicion.fecha_firma_contrato.toString()
 										 ){
-											
+									
 											ps.setTimestamp(header.getHeaderPosition()+1, this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 											System.out.println("valor: " + this.returnCellTimeStampAbastosOrdenes(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 											System.out.println("tipo de celda: " + cellType);
