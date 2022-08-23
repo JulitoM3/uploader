@@ -80,10 +80,6 @@ import modelos.Conexion;
 public class App {
 
 	private Index index;
-	private Compranet compranet;
-	private ClaveContrato claveContrato;
-	private OrdenReposicion ordenReposcion;
-	private Procedimiento procedimiento;
 	private Connection conn = new Conexion().getConnection();
 	
 	private String compraNetPath = "";
@@ -118,8 +114,7 @@ public class App {
 		
 		
 		this.index = new Index();
-		this.compranet = new Compranet();
-		this.ordenReposcion = new OrdenReposicion();
+	
 		
 		
 		/*
@@ -302,6 +297,7 @@ public class App {
 	
 		ActionListener subirArticulos = ewt -> {
 			
+			this.conn = new Conexion().getConnection();
 			
 			try {
 				FileInputStream files = new FileInputStream (new File(this.articulosContratoPath));
@@ -331,7 +327,6 @@ public class App {
 
 					
 				while(itr.hasNext()){
-					this.compranet = new Compranet();
 					Row currentRow = itr.next();
 					if(currentRow.getRowNum()== 0){ //saltamos el header
 						continue;
@@ -480,7 +475,7 @@ public class App {
 	
 		ActionListener subirCompraNet = ewt -> {
 			
-			
+			this.conn = new Conexion().getConnection();
 			try {
 				FileInputStream files = new FileInputStream (new File(this.compraNetPath));
 				XSSFWorkbook  workbook = new XSSFWorkbook(files);
@@ -499,9 +494,8 @@ public class App {
 					+ "folio_rupc,rfc,proveedor_contratista,estratificacion,clave_pais,rfc_verificado_sat,credito_externo,organismo_financiero,url_compranet, created_at)"
 					+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-					
+			
 				while(itr.hasNext()){
-					this.compranet = new Compranet();
 					Row currentRow = itr.next();
 					if(currentRow.getRowNum()== 0){ //saltamos el header
 						continue;
@@ -629,7 +623,7 @@ public class App {
 
 		ActionListener subirOrdenes = ewt -> {
 			
-			
+			this.conn = new Conexion().getConnection();
 			try {
 				FileInputStream files = new FileInputStream (new File(this.ordenesReposicionPath));
 				XSSFWorkbook  workbook = new XSSFWorkbook(files);
@@ -865,7 +859,7 @@ public class App {
 	private ActionListener subirAltas() throws SQLException, IOException{
 
 		ActionListener subirAltas = ewt -> {
-			
+			this.conn = new Conexion().getConnection();
 			
 			try {
 				FileInputStream files = new FileInputStream (new File(this.altasPath));
@@ -1105,7 +1099,7 @@ public class App {
 
 		ActionListener subirAltasPreiSai = ewt -> {
 			
-			
+			this.conn = new Conexion().getConnection();
 			try {
 				FileInputStream files = new FileInputStream (new File(this.altasSaiPreiPath));
 				XSSFWorkbook  workbook = new XSSFWorkbook(files);
@@ -1351,7 +1345,7 @@ public class App {
 	private ActionListener subirPagos() throws SQLException, IOException{
 
 		ActionListener subirPagos = ewt -> {
-			
+			this.conn = new Conexion().getConnection();
 			try {
 				FileInputStream files = new FileInputStream (new File(this.pagosPath));
 				XSSFWorkbook  workbook = new XSSFWorkbook(files);
@@ -1598,7 +1592,7 @@ public class App {
 	private ActionListener subirNotas() throws SQLException, IOException{
 
 		ActionListener subirNotas = ewt -> {
-			
+			this.conn = new Conexion().getConnection();
 			try {
 				FileInputStream files = new FileInputStream (new File(this.notasCreditoPath));
 				XSSFWorkbook  workbook = new XSSFWorkbook(files);
