@@ -443,7 +443,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -592,7 +592,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -698,7 +698,7 @@ public class App {
 						PreparedStatement ps = this.conn.prepareStatement(insertSql);
 						for(OrdenesReposicion header : OrdenesReposicion.values()){
 							
-							System.out.println("posicion:" + header.getHeaderPosition());
+							System.out.println("posicion:" + header.getHeaderPosition()+1);
 							System.out.println("header: " + header.toString());
 							System.out.println("vacio o nulo?: " + this.isEmptyOrNull(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 							
@@ -734,7 +734,7 @@ public class App {
 								if(header.toString() == OrdenesReposicion.estatus_orden.toString()){
 									
 									String status = this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition());
-									System.out.println("cae en la validacion" + status);
+									System.out.println("cae en la validacion" + status +  "row: " +  currentRow.getRowNum());
 									
 									if(status.equals("ATENDIDA") || status.equals("ATENDIDA PARCIAL")){
 										System.out.println("cae en la validacion de atendida o atendida parcial");
@@ -750,6 +750,8 @@ public class App {
 											System.out.println("Status: ATENDIDA CON ATRASO");
 											System.out.println("header: " + (header.getHeaderPosition()+1));
 											System.out.println("ps: " + ps.toString());
+											}else{
+												ps.setString(header.getHeaderPosition()+1, status);
 											}
 										}
 										
@@ -760,11 +762,14 @@ public class App {
 												System.out.println("Status: ATENDIDA PARCIAL CON ATRASO");
 												System.out.println("header: " + header.getHeaderPosition()+1);
 												System.out.println("ps: " + ps.toString());
+											}else{
+												ps.setString(header.getHeaderPosition()+1, status);
 											}
 										}
 									
 									}
 									else{
+										System.out.println("Estatus:" + status);
 										ps.setString(header.getHeaderPosition()+1,this.returnCellValue(workbook, sheet, currentRow.getRowNum(), header.getHeaderPosition()));
 									}
 		
@@ -867,7 +872,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -1108,7 +1113,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -1354,7 +1359,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -1602,7 +1607,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -1831,7 +1836,7 @@ public class App {
 			}	
 			
 			JOptionPane.showMessageDialog(null,
-	                "Se subió la información de manera correcta",
+	                "Se subió la información de manera correcta" +  this.getCurrentTimeStamp(),
 	                "Mensaje",
 	                JOptionPane.INFORMATION_MESSAGE);
 		};
@@ -1903,8 +1908,9 @@ public class App {
 	Row selectedRow = sh.getRow(row);
 	Cell selectedCell = selectedRow.getCell(cell);
 	value = selectedCell.getDateCellValue();
-	System.out.println("Valor de la celda: " + value.getTime());
-	return new java.sql.Timestamp(value.getTime());
+	Timestamp toReturn = new java.sql.Timestamp(value.getTime());
+	System.out.println("Valor de la celda: " + value.getTime() + " " +  toReturn);
+	return toReturn;
 	
 	}
 
