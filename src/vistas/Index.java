@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Label;
 import javax.swing.JSeparator;
+import java.awt.Toolkit;
 
 public class Index extends JFrame {
 	private JPanel contentPane;
@@ -76,13 +77,14 @@ public class Index extends JFrame {
 		
 		
 	public Index() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Index.class.getResource("/imgs/png-clipart-mexican-social-security-institute-logo-imss-regional-general-hospital-no-1-gfycat-alta\u00B1gen-\u00C5\u0178ekiller-leaf-text.png")));
 		setResizable(false);
 		setTitle("Enlace de Sistemas Institucionales");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(400, 400,604, 436);
 		getContentPane().setLayout(null);
 		
-		JLabel lblRutaDeLa = new JLabel("CompraNet:");
+		JLabel lblRutaDeLa = new JLabel("Contratos:");
 		lblRutaDeLa.setBounds(21, 62, 132, 20);
 		getContentPane().add(lblRutaDeLa);
 		
@@ -96,7 +98,7 @@ public class Index extends JFrame {
 		btnUploadCompraNet.setBounds(490, 62, 78, 21);
 		getContentPane().add(btnUploadCompraNet);
 		
-		JLabel labelArticulos = new JLabel("Articulos del Contrato");
+		JLabel labelArticulos = new JLabel("Contratos:");
 		labelArticulos.setBounds(21, 143, 161, 20);
 		getContentPane().add(labelArticulos);
 		
@@ -110,7 +112,7 @@ public class Index extends JFrame {
 		btnUploadArticulos.setBounds(490, 142, 78, 23);
 		getContentPane().add(btnUploadArticulos);
 		
-		JLabel lblOrdenesReposicion = new JLabel("Ordenes de Reposici\u00F3n");
+		JLabel lblOrdenesReposicion = new JLabel("Ordenes de Reposici\u00F3n:");
 		lblOrdenesReposicion.setBounds(21, 174, 161, 23);
 		getContentPane().add(lblOrdenesReposicion);
 		
@@ -124,7 +126,7 @@ public class Index extends JFrame {
 		getContentPane().add(textPathOrdenes);
 		textPathOrdenes.setColumns(10);
 		
-		JLabel lblArchivoAltas = new JLabel("Altas");
+		JLabel lblArchivoAltas = new JLabel("Altas:");
 		lblArchivoAltas.setBounds(21, 208, 104, 23);
 		getContentPane().add(lblArchivoAltas);
 		
@@ -138,7 +140,7 @@ public class Index extends JFrame {
 		btnUploadAltas.setBounds(490, 208, 78, 23);
 		getContentPane().add(btnUploadAltas);
 		
-		JLabel lblArchivoAltasSai = new JLabel("Altas SAI - PREI");
+		JLabel lblArchivoAltasSai = new JLabel("Altas SAI - PREI:");
 		lblArchivoAltasSai.setBounds(21, 242, 161, 20);
 		getContentPane().add(lblArchivoAltasSai);
 		
@@ -211,11 +213,11 @@ public class Index extends JFrame {
 		separator_5.setBounds(374, 302, 204, 20);
 		getContentPane().add(separator_5);
 		
-		JLabel lblArchivoPagos = new JLabel("Pagos");
+		JLabel lblArchivoPagos = new JLabel("Pagos:");
 		lblArchivoPagos.setBounds(21, 319, 145, 20);
 		getContentPane().add(lblArchivoPagos);
 		
-		JLabel lblArchivoNotasDe = new JLabel("Notas de cr\u00E9dito");
+		JLabel lblArchivoNotasDe = new JLabel("Notas de cr\u00E9dito:");
 		lblArchivoNotasDe.setBounds(21, 363, 155, 20);
 		getContentPane().add(lblArchivoNotasDe);
 		
