@@ -7,7 +7,10 @@ import java.sql.SQLException;
 public class Conexion {
     private String baseDatos = "test_java";
     private String usuario = "root";
+    //private String usuario = "test";
+    //private String password = "Sofia11!";
     private String password = "";
+    //private String host = "jdbc:mysql://172.24.147.198:3306/" + baseDatos;
     private String host = "jdbc:mysql://localhost:3306/" + baseDatos;
     Connection  con = null;
     public Conexion(){
